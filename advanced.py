@@ -33,7 +33,7 @@ house_data.columns = [c.lower().strip().replace(" ", "_") for c in house_data.co
 # Drop non-predictive columns
 house_data = house_data.drop(columns=["timestamp", "id"])
 
-# Let's look at boxplots
+
 
 columns_to_inspect = house_data.select_dtypes(include=[np.number]).columns
 
