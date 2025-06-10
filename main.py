@@ -11,6 +11,7 @@ from sklearn.preprocessing import StandardScaler, FunctionTransformer
 from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
 from sklearn.linear_model import LinearRegression, Ridge, Lasso
 from xgboost import XGBRegressor
+import lightgbm as lgb
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import make_scorer, mean_squared_error, r2_score
@@ -26,6 +27,8 @@ house_data = pd.read_csv(
     index_col = 0, 
     low_memory=True
     )
+
+house_data.head()
 
 #housekeeping
 house_data.columns = [c.lower().strip().replace(" ", "_") for c in house_data.columns] 
@@ -388,7 +391,7 @@ IQR = Q3 - Q1
 lower, upper = max(Q1 - 1.5*IQR, 0), Q3 + 1.5*IQR
 
 floor_outliers = house_data[(house_data["floor"] < lower) | (house_data["floor"] > upper)]
-floor_outliers["build_year"]
+floor_outliers["floor"]
 floor_outliers["floor"].max()
 
 # Thse outlier values are totally fine, however sicne there are not as many of them , they'll be considered as "outliers" statistically - we can confidently apply log transfrom on the floor column (good for highly right-skewed values too). Also, floors of 0s might be possible - let's add epsilon to avoid log transform errors.
@@ -423,6 +426,8 @@ house_data.drop(house_data[house_data["school_km"]>15].index, inplace=True)
 
 # Looks like the sanity check is complete. Let's proceed to feature eng now, before we get to the scaling part.
 
+epsilon = 1e-5
+
 # quick correlation matrix
 corr = house_data[columns_to_inspect + ["price_doc"]].corr()
 sns.heatmap(corr, vmin=-1, vmax=1, center=0)
@@ -433,8 +438,8 @@ plt.show()
 # Let's derive aan interaction term full_sq * num_room before dropping full_sq. Could proxy for average room size
 house_data["full_sq_num_room"] = house_data["full_sq"]*house_data["num_room"]
 
-house_data["life_full_ratio"] = house_data["life_sq"] / house_data["full_sq"]
-house_data.drop(columns=["full_sq", "life_sq", "id"], inplace=True)
+house_data["life_full_ratio"] = house_data["life_sq"] / (house_data["full_sq"] + epsilon)
+house_data.drop(columns=["id"], inplace=True)
 
 # also, let's extract year, month, dayofweek, and day from the timestamp column
 house_data["trans_year"] = house_data["timestamp"].dt.year
@@ -443,17 +448,30 @@ house_data["trans_dayofweek"] = house_data["timestamp"].dt.dayofweek
 house_data["trans_day"] = house_data["timestamp"].dt.day
 house_data.drop(columns=["timestamp"], inplace=True)
 
+house_data["building_age"] = house_data["trans_year"] - house_data["build_year"]
+
+house_data["rooms_per_sq"] = house_data["num_room"] / (house_data["full_sq"] + epsilon) # captures how densely rooms are laid out
+
+house_data["avg_room_size"] = house_data["life_full_ratio"] * house_data["full_sq"] / (house_data["num_room"] + epsilon) # gives a direct sense of “how big each living-area room is”
+
+house_data["is_top_floor"] = (house_data["floor"] == house_data["max_floor"]).astype(int) # living on the top (or very high) floor often commands a premium
+
+house_data["avg_amenity_km"] = house_data[["kindergarten_km","school_km","park_km","railroad_km"]].mean(axis=1)
+house_data["sum_amenity_km"] = house_data[["kindergarten_km","school_km","park_km","railroad_km"]].sum(axis=1)
+house_data["close_amenities"]   = (house_data[["kindergarten_km","school_km","park_km"]] < 1).sum(axis=1)
+
+house_data["popu_density_idx"] = house_data["raion_popul"] / (1 + house_data["avg_amenity_km"] + epsilon) # high-density districts that are well-served by amenities may behave differently than high-density but poorly served ones
+
 # Let's proceed to scaling. Let's look at the distributions again
 
 columns_to_inspect = [c for c in house_data.columns if c != "price_doc"]
 
-nrows=4
-ncols=6
+nrows=7
+ncols=5
 fig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=(20, 12))
 axes_flat = axes.flatten()
 
 for ax, col in zip(axes_flat, columns_to_inspect):
-    
     ax.hist(house_data[col], bins=50)
     ax.set_title(col)
     
@@ -467,13 +485,12 @@ plt.show()
 house_data["price_doc"].hist()
 
 # log transform looks reasonable here
-epsilon = 1e-5
 house_data["price_doc"] = np.log1p(house_data["price_doc"] + epsilon)
 
 # Looks like we would want to apply log transform for kitch_sq, floor and max_floor, num_room, all the km variables, and metro_min_walk.
 # We can perfrom standard scaling (mean=0, std=1) on build_year, trans_year, trans_month, trans_dayofweek, trans_day
-skewed_feats = ["kitch_sq", "floor", "max_floor", "num_room", "kindergarten_km", "school_km", "park_km", "railroad_km", "metro_min_walk"]
-gauss_feats = ["build_year", "trans_year", "trans_month", "trans_dayofweek", "trans_day"]
+skewed_feats = ["full_sq", "life_sq", "kitch_sq", "floor", "max_floor", "num_room", "sub_area", "kindergarten_km", "school_km", "park_km", "railroad_km", "metro_min_walk", "full_sq_num_room", "life_full_ratio","rooms_per_sq", "avg_room_size","avg_amenity_km", "sum_amenity_km"]
+gauss_feats = ["build_year", "raion_popul", "trans_year", "trans_month", "trans_dayofweek", "trans_day", "building_age", "close_amenities"]
 
 # Establish preprocessor
 preprocessor = ColumnTransformer(
@@ -511,34 +528,72 @@ X_train, X_test, y_train, y_test = train_test_split(
 # y_pred = model_pipeline.predict(X_test)
 # rmse_baseline = np.sqrt(mean_squared_error(y_pred, y_test))
 
-# Fit RF
+# lgbm = lgb.LGBMRegressor(
+#     random_state=42,
+#     verbose = False
+# )
+
+# # Fit lgbm model
+# pipe = Pipeline([
+#     ("pre", preprocessor),
+#     ("reg", lgbm)
+# ])
+
+# # param_grid = {
+# #     "reg__n_estimators": [700],
+# #     #"reg__max_depth": [20, 30]
+# #     }
+
+# param_grid = {
+#     "reg__n_estimators":       [300, 500],
+#     "reg__learning_rate":      [0.05, 1],
+#     "reg__num_leaves":         [50, 70],
+#     "reg__max_depth":          [10,30],
+#     "reg__subsample":          [0.6],
+#     "reg__colsample_bytree":   [0.8]
+# }
+
+# grid_rf = GridSearchCV(
+#     pipe, 
+#     param_grid, 
+#     cv=5, 
+#     scoring="neg_root_mean_squared_error", 
+#     refit=True
+# )
+# grid_rf.fit(X, y)
+
+# best_params = grid_rf.best_params_
+# best_rmse  = -grid_rf.best_score_
+
+# print("\nGRID SEARCH RF RESULTS")
+# print(f" Best parameters: {best_params}")
+# print(f" CV RMSE    : {best_rmse:.3f}")
+
+# best_pipe = grid_rf.best_estimator_
+# best_pipe.fit(X_train, y_train)
+# y_pred = best_pipe.predict(X_test)
+# y_pred_doll = np.expm1(y_pred)  # reverse log1p transform
+# y_test_doll = np.expm1(y_test)  # reverse log1p transform
+# print("Test RMSE in $:", np.sqrt(mean_squared_error(y_test_doll, y_pred_doll)))
+
+# Fit ridge model
 pipe = Pipeline([
-    ("pre", preprocessor),
-    ("reg", RandomForestRegressor(n_jobs=-1, random_state=0))
+    ("reg", Ridge(random_state=0))
 ])
 
-param_grid = {
-    "reg__n_estimators": [300, 500, 700],
-    #"reg__max_depth": [20, 30]
-    }
+# param_grid = {
+#     "reg__alpha": [0.01, 0.1, 1.0, 10.0, 100.0]
+# }
 
-grid_rf = GridSearchCV(
-    pipe, 
-    param_grid, 
-    cv=5, 
-    scoring="neg_root_mean_squared_error", 
-    refit=True
-)
-grid_rf.fit(X, y)
+# grid_ridge = GridSearchCV(
+#     pipe,
+#     param_grid,
+#     cv=5,
+#     scoring="neg_root_mean_squared_error",
+#     refit=True,
+#     n_jobs=-1
+# )
+pipe.fit(X_train, y_train)
 
-best_params = grid_rf.best_params_
-best_rmse  = -grid_rf.best_score_
-
-print("\nGRID SEARCH RF RESULTS")
-print(f" Best parameters: {best_params}")
-print(f" CV RMSE    : {best_rmse:.3f}")
-
-best_pipe = grid_rf.best_estimator_
-best_pipe.fit(X_train, y_train)
-y_pred = best_pipe.predict(X_test)
+y_pred = pipe.predict(X_test)
 print("Test RMSE:", np.sqrt(mean_squared_error(y_test, y_pred)))
