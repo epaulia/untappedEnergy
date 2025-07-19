@@ -30,6 +30,7 @@ The project uses the **Sberbank Housing Dataset**, which contains real estate da
 untappedEnergy/
 ├── base.ipynb              # Baseline model with minimal preprocessing (Jupyter notebook)
 ├── advanced.ipynb          # Advanced model with comprehensive preprocessing (Jupyter notebook)
+├── requirements.txt        # Python package dependencies
 ├── baseline_rmse.txt       # Baseline model RMSE result
 ├── presentation.pdf        # Project presentation
 ├── README.md               # Project documentation
@@ -76,9 +77,25 @@ untappedEnergy/
 ## 🚀 Getting Started
 
 ### Prerequisites
+
+**Option 1: Install from requirements.txt (Recommended)**
 ```bash
-pip install pandas numpy scikit-learn matplotlib seaborn xgboost lightgbm
+pip install -r requirements.txt
 ```
+
+**Option 2: Install packages individually**
+```bash
+pip install pandas numpy scikit-learn matplotlib scipy jupyter ipykernel
+```
+
+### Required Packages
+- **pandas**: Data manipulation and analysis
+- **numpy**: Numerical computing
+- **scikit-learn**: Machine learning algorithms and preprocessing
+- **matplotlib**: Data visualization
+- **scipy**: Statistical functions
+- **jupyter**: Jupyter notebook environment
+- **ipykernel**: Python kernel for Jupyter
 
 ### Running the Models
 
@@ -132,6 +149,7 @@ This project demonstrates:
 
 - **`base.ipynb`**: Baseline model with minimal preprocessing (main demonstration)
 - **`advanced.ipynb`**: Advanced model with comprehensive preprocessing (main demonstration)
+- **`requirements.txt`**: Python package dependencies for the project
 - **`baseline_rmse.txt`**: Baseline model RMSE result for comparison
 - **`presentation.pdf`**: Project presentation slides
 - **`Data/sberbank_housing.csv`**: Main dataset (preprocessed subset of original data)
