@@ -73,10 +73,10 @@ untappedEnergy/
 
 ## 📈 Results
 
-| Model | RMSE (Log Scale) | RMSE (Dollars) | Features Used | Dataset Size |
+| Model | RMSE (Log Scale) | RMSE (Rubles) | Features Used | Dataset Size |
 |-------|------------------|----------------|---------------|--------------|
-| Baseline | 0.551 | $4,595,983 | 6 features | 27,000 records |
-| Advanced | 0.502 | $3,340,000 | All features | 11,826 records |
+| Baseline | 0.551 | 4,595,983 | 6 features | 27,000 records |
+| Advanced | 0.502 | 3,340,000 | All features | 11,826 records |
 
 **Improvement**: **27.30% reduction in RMSE** through advanced preprocessing
 
