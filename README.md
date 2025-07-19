@@ -1,21 +1,32 @@
 # Housing Price Prediction: Preprocessing Impact Demo
 
-This repository contains a demonstration project showcasing how advanced preprocessing techniques can significantly improve machine learning model performance. The project compares two approaches to housing price prediction using the Sberbank Housing dataset.
+This repository contains a demonstration project showcasing how better preprocessing techniques can improve machine learning model performance. The project compares two approaches to housing price prediction using the Sberbank Housing dataset.
+
+## ⚠️ Important Disclaimer
+
+**This project is NOT about achieving the lowest possible prediction error.** The absolute RMSE values (in rubles) are high because:
+
+- **Focus**: The goal is to demonstrate the **relative improvement** (27.30%) achieved through better preprocessing
+- **Methodology**: Both models use the same simple Ridge regression algorithm
+- **Purpose**: Show that systematic data preprocessing can deliver improvements even with basic models
+- **Learning Objective**: Emphasize that clean data and proper preprocessing often trump complex algorithms
+
+**Key Takeaway**: The 27.30% improvement demonstrates that investing in data quality and preprocessing can deliver immediate, substantial benefits to any ML project.
 
 ## 🎯 Project Overview
 
 The goal of this project is to demonstrate the dramatic impact that proper data preprocessing can have on model performance. We compare:
 
-- **Baseline Model** (`base.ipynb`/`base.py`): Minimal preprocessing approach
-- **Advanced Model** (`advanced.ipynb`/`advanced.py`): Comprehensive preprocessing pipeline
+- **Baseline Model** (`base.ipynb`): Minimal preprocessing approach
+- **Improved Model** (`advanced.ipynb`): Better preprocessing pipeline
 
-**Key Result**: The advanced preprocessing approach achieved a **27.30% reduction in RMSE** compared to the baseline model.
+**Key Result**: The improved preprocessing approach achieved a **27.30% reduction in RMSE** compared to the baseline model.
 
 ### Business Context
 This case study addresses a critical industry challenge: **70% of AI project failures are due to data quality issues**, resulting in an estimated **$5T annual revenue loss globally**. This project demonstrates how strategic data preprocessing can deliver immediate, substantial improvements in AI project success rates.
 
 ### Key Achievement
-**27.30% improvement in model accuracy through comprehensive data preprocessing alone**, proving that clean data trumps complex algorithms.
+**27.30% improvement in model accuracy through better data preprocessing alone**, proving that clean data trumps complex algorithms.
 
 ## 📊 Dataset
 
@@ -26,7 +37,7 @@ The project uses the **Sberbank Housing Dataset**, which contains real estate da
 - **Size**: ~27,000 records after preprocessing
 
 ### Data Files
-- `Data/sberbank_housing.csv` - Main dataset (preprocessed subset)
+- `Data/sberbank_housing.csv` - Main dataset
 
 ### Initial Data State
 The raw dataset exhibited typical real-world data quality issues:
@@ -41,11 +52,12 @@ The raw dataset exhibited typical real-world data quality issues:
 ```
 untappedEnergy/
 ├── base.ipynb              # Baseline model with minimal preprocessing (Jupyter notebook)
-├── advanced.ipynb          # Advanced model with comprehensive preprocessing (Jupyter notebook)
+├── advanced.ipynb          # Improved model with better preprocessing (Jupyter notebook)
 ├── requirements.txt        # Python package dependencies
 ├── baseline_rmse.txt       # Baseline model RMSE result
 ├── presentation.pdf        # Project presentation
 ├── README.md               # Project documentation
+├── .gitignore              # Git ignore rules
 └── Data/
     └── sberbank_housing.csv
 ```
@@ -61,8 +73,8 @@ untappedEnergy/
 - **Limitations**: Ignores categorical data, cannot handle missing values effectively
 - **Dataset size**: 27,000 records (21,600 training, 5,400 test)
 
-### Advanced Approach (`advanced.ipynb`)
-- **Comprehensive preprocessing pipeline**:
+### Improved Approach (`advanced.ipynb`)
+- **Better preprocessing pipeline**:
   - **Data cleaning**: Outlier removal, duplicate elimination, data validation
   - **Missing value imputation**: Hybrid approach (KNN for numeric, mode for categorical)
   - **Feature engineering**: Living efficiency, room size, floor ratio, log transformations, amenity score
@@ -76,20 +88,20 @@ untappedEnergy/
 | Model | RMSE (Log Scale) | RMSE (Rubles) | Features Used | Dataset Size |
 |-------|------------------|----------------|---------------|--------------|
 | Baseline | 0.551 | 4,595,983 | 6 features | 27,000 records |
-| Advanced | 0.502 | 3,340,000 | All features | 11,826 records |
+| Improved | 0.502 | 3,340,000 | All features | 11,826 records |
 
-**Improvement**: **27.30% reduction in RMSE** through advanced preprocessing
+**Improvement**: **27.30% reduction in RMSE** through better preprocessing
 
 ### Key Performance Metrics:
 - **Baseline Model**: Uses only 6 complete numeric features, ignores 11 features with missing values
-- **Advanced Model**: Utilizes all 17 features through sophisticated preprocessing
+- **Improved Model**: Utilizes all 17 features through better preprocessing
 - **Feature Engineering**: Creates 5 new predictive features (living efficiency, room size, floor ratio, log transformations, amenity score)
-- **Data Quality**: Advanced model removes outliers and duplicates, resulting in cleaner but smaller dataset
+- **Data Quality**: Improved model removes outliers and duplicates, resulting in cleaner but smaller dataset
 
 ### Business Impact
 For a housing market application:
 - **Baseline RMSE**: ₽5.9M average prediction error
-- **Advanced RMSE**: ₽4.3M average prediction error
+- **Improved RMSE**: ₽4.3M average prediction error
 - **Practical benefit**: ₽1.6M more accurate predictions on average
 
 This improvement translates to:
@@ -124,7 +136,7 @@ pip install pandas numpy scikit-learn matplotlib scipy jupyter ipykernel
 
 **Jupyter Notebooks** (Primary Method):
 1. **Baseline Model**: Open `base.ipynb` and run all cells
-2. **Advanced Model**: Open `advanced.ipynb` and run all cells
+2. **Improved Model**: Open `advanced.ipynb` and run all cells
 
 **Note**: The Jupyter notebooks contain the complete analysis with outputs, visualizations, and detailed explanations. They are the main demonstration files for this project.
 
@@ -177,28 +189,15 @@ This project demonstrates:
 5. **ROI is immediate**: High-impact improvements with reasonable time investment (~4 hours for comprehensive pipeline)
 6. **Preprocessing ROI is exceptional**: Time investment vs. performance gain ratio is very high
 
-## 📝 Files Description
-
-- **`base.ipynb`**: Baseline model with minimal preprocessing (main demonstration)
-- **`advanced.ipynb`**: Advanced model with comprehensive preprocessing (main demonstration)
-- **`requirements.txt`**: Python package dependencies for the project
-- **`baseline_rmse.txt`**: Baseline model RMSE result for comparison
-- **`presentation.pdf`**: Project presentation slides
-- **`Data/sberbank_housing.csv`**: Main dataset (preprocessed subset of original data)
-
 **Note**: The Jupyter notebooks contain the complete analysis with outputs, visualizations, and detailed explanations. They are the primary files for understanding and running the demonstration.
 
 ## 🤝 Contributing
 
 This is a demonstration project. Feel free to experiment with different preprocessing techniques or models to further improve performance.
 
-## 📄 License
-
-This project is for educational and demonstration purposes.
-
 ---
 
-**Note**: This project demonstrates the significant impact that proper data preprocessing can have on machine learning model performance, with a focus on practical, domain-specific techniques rather than complex algorithms.
+**Note**: This project demonstrates the impact that proper data preprocessing can have on machine learning model performance, with a focus on practical, domain-specific techniques rather than complex algorithms.
 
 ---
 
