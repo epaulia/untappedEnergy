@@ -9,7 +9,13 @@ The goal of this project is to demonstrate the dramatic impact that proper data 
 - **Baseline Model** (`base.ipynb`/`base.py`): Minimal preprocessing approach
 - **Advanced Model** (`advanced.ipynb`/`advanced.py`): Comprehensive preprocessing pipeline
 
-**Key Result**: The advanced preprocessing approach achieved a **~27% reduction in RMSE** compared to the baseline model.
+**Key Result**: The advanced preprocessing approach achieved a **27.30% reduction in RMSE** compared to the baseline model.
+
+### Business Context
+This case study addresses a critical industry challenge: **70% of AI project failures are due to data quality issues**, resulting in an estimated **$5T annual revenue loss globally**. This project demonstrates how strategic data preprocessing can deliver immediate, substantial improvements in AI project success rates.
+
+### Key Achievement
+**27.30% improvement in model accuracy through comprehensive data preprocessing alone**, proving that clean data trumps complex algorithms.
 
 ## 📊 Dataset
 
@@ -21,8 +27,14 @@ The project uses the **Sberbank Housing Dataset**, which contains real estate da
 
 ### Data Files
 - `Data/sberbank_housing.csv` - Main dataset (preprocessed subset)
-- `Data/train.csv` - Original training data
-- `Data/test.csv` - Original test data
+
+### Initial Data State
+The raw dataset exhibited typical real-world data quality issues:
+- **Missing values**: Up to 50% in some features (life_sq: 5,537, build_year: 12,869, state: 13,067)
+- **Inconsistent data types**: Numeric values stored as strings
+- **No proper normalization**: Features on different scales
+- **Outliers and noise**: In target variable and feature distributions
+- **Categorical variables**: Requiring proper encoding strategies
 
 ## 🏗️ Project Structure
 
@@ -73,6 +85,17 @@ untappedEnergy/
 - **Advanced Model**: Utilizes all 17 features through sophisticated preprocessing
 - **Feature Engineering**: Creates 5 new predictive features (living efficiency, room size, floor ratio, log transformations, amenity score)
 - **Data Quality**: Advanced model removes outliers and duplicates, resulting in cleaner but smaller dataset
+
+### Business Impact
+For a housing market application:
+- **Baseline RMSE**: ₽5.9M average prediction error
+- **Advanced RMSE**: ₽4.3M average prediction error
+- **Practical benefit**: ₽1.6M more accurate predictions on average
+
+This improvement translates to:
+- More accurate property valuations
+- Better investment decisions
+- Reduced financial risk in real estate transactions
 
 ## 🚀 Getting Started
 
@@ -145,6 +168,15 @@ This project demonstrates:
 - Effective categorical variable handling
 - The relationship between data quality and model performance
 
+## 💡 Key Takeaways
+
+1. **Clean data trumps complex algorithms**: 27.30% improvement through preprocessing alone
+2. **Domain knowledge guides feature engineering**: Understanding housing markets led to effective feature creation
+3. **Pipeline design matters**: Proper architecture prevents common pitfalls like data leakage
+4. **Categorical data is valuable**: Smart encoding preserves important information
+5. **ROI is immediate**: High-impact improvements with reasonable time investment (~4 hours for comprehensive pipeline)
+6. **Preprocessing ROI is exceptional**: Time investment vs. performance gain ratio is very high
+
 ## 📝 Files Description
 
 - **`base.ipynb`**: Baseline model with minimal preprocessing (main demonstration)
@@ -166,4 +198,8 @@ This project is for educational and demonstration purposes.
 
 ---
 
-**Note**: This project demonstrates the significant impact that proper data preprocessing can have on machine learning model performance, with a focus on practical, domain-specific techniques rather than complex algorithms. 
+**Note**: This project demonstrates the significant impact that proper data preprocessing can have on machine learning model performance, with a focus on practical, domain-specific techniques rather than complex algorithms.
+
+---
+
+**Presented by**: This case study was presented by GroupLabs at the "AI-Ready or AI-Hopeful?" workshop for UntappedEnergy, demonstrating practical approaches to improving AI project success rates through systematic data quality practices. 
