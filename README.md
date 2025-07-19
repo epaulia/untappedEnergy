@@ -28,44 +28,50 @@ The project uses the **Sberbank Housing Dataset**, which contains real estate da
 
 ```
 untappedEnergy/
-├── base.ipynb              # Baseline model with minimal preprocessing
-├── base.py                 # Baseline model script
-├── advanced.ipynb          # Advanced model with comprehensive preprocessing
-├── advanced.py             # Advanced model script
-├── main.py                 # Complete preprocessing pipeline
+├── base.ipynb              # Baseline model with minimal preprocessing (Jupyter notebook)
+├── advanced.ipynb          # Advanced model with comprehensive preprocessing (Jupyter notebook)
 ├── baseline_rmse.txt       # Baseline model RMSE result
 ├── presentation.pdf        # Project presentation
+├── README.md               # Project documentation
 └── Data/
-    ├── sberbank_housing.csv
-    ├── train.csv
-    └── test.csv
+    └── sberbank_housing.csv
 ```
+
+**Note**: This project focuses on the Jupyter notebooks (`base.ipynb` and `advanced.ipynb`) as the primary demonstration files. The notebooks contain complete analysis with outputs, visualizations, and detailed explanations.
 
 ## 🔬 Methodology
 
-### Baseline Approach (`base.ipynb`/`base.py`)
+### Baseline Approach (`base.ipynb`)
 - **Minimal preprocessing**: Only basic cleaning and log transformation of target
-- **Feature selection**: Uses only complete numeric features
-- **Model**: Ridge regression with minimal hyperparameter tuning
+- **Feature selection**: Uses only 6 complete numeric features (out of 17 total features)
+- **Model**: Ridge regression with alpha=10.0
 - **Limitations**: Ignores categorical data, cannot handle missing values effectively
+- **Dataset size**: 27,000 records (21,600 training, 5,400 test)
 
-### Advanced Approach (`advanced.ipynb`/`advanced.py`)
+### Advanced Approach (`advanced.ipynb`)
 - **Comprehensive preprocessing pipeline**:
-  - **Data cleaning**: Outlier removal, duplicate elimination
+  - **Data cleaning**: Outlier removal, duplicate elimination, data validation
   - **Missing value imputation**: Hybrid approach (KNN for numeric, mode for categorical)
-  - **Feature engineering**: Living efficiency, room size, building age, floor ratio
-  - **Categorical encoding**: Smart encoding based on cardinality
+  - **Feature engineering**: Living efficiency, room size, floor ratio, log transformations, amenity score
+  - **Categorical encoding**: Smart encoding based on cardinality (frequency, one-hot, ordinal)
   - **Scaling**: StandardScaler for all features
-- **Model**: Ridge regression with optimized hyperparameters
+- **Model**: Ridge regression with alpha=10.0
+- **Dataset size**: 11,826 records (9,460 training, 2,366 test) after cleaning
 
 ## 📈 Results
 
-| Model | RMSE (Dollars) | Features Used | Preprocessing Level |
-|-------|----------------|---------------|-------------------|
-| Baseline | $4,595,983 | ~10 features | Minimal |
-| Advanced | ~$3,355,000 | All features | Comprehensive |
+| Model | RMSE (Log Scale) | RMSE (Dollars) | Features Used | Dataset Size |
+|-------|------------------|----------------|---------------|--------------|
+| Baseline | 0.551 | $4,595,983 | 6 features | 27,000 records |
+| Advanced | 0.502 | $3,340,000 | All features | 11,826 records |
 
-**Improvement**: ~27% reduction in RMSE through advanced preprocessing
+**Improvement**: **27.30% reduction in RMSE** through advanced preprocessing
+
+### Key Performance Metrics:
+- **Baseline Model**: Uses only 6 complete numeric features, ignores 11 features with missing values
+- **Advanced Model**: Utilizes all 17 features through sophisticated preprocessing
+- **Feature Engineering**: Creates 5 new predictive features (living efficiency, room size, floor ratio, log transformations, amenity score)
+- **Data Quality**: Advanced model removes outliers and duplicates, resulting in cleaner but smaller dataset
 
 ## 🚀 Getting Started
 
@@ -76,19 +82,11 @@ pip install pandas numpy scikit-learn matplotlib seaborn xgboost lightgbm
 
 ### Running the Models
 
-1. **Baseline Model**:
-   ```bash
-   python base.py
-   ```
+**Jupyter Notebooks** (Primary Method):
+1. **Baseline Model**: Open `base.ipynb` and run all cells
+2. **Advanced Model**: Open `advanced.ipynb` and run all cells
 
-2. **Advanced Model**:
-   ```bash
-   python advanced.py
-   ```
-
-3. **Jupyter Notebooks**:
-   - Open `base.ipynb` for baseline approach
-   - Open `advanced.ipynb` for advanced approach
+**Note**: The Jupyter notebooks contain the complete analysis with outputs, visualizations, and detailed explanations. They are the main demonstration files for this project.
 
 ## 🔧 Key Preprocessing Techniques Demonstrated
 
@@ -98,11 +96,11 @@ pip install pandas numpy scikit-learn matplotlib seaborn xgboost lightgbm
 - **Domain-specific imputation**: Living space ratios based on neighborhood
 
 ### 2. Feature Engineering
-- **Living Efficiency**: `life_sq / full_sq`
-- **Average Room Size**: `full_sq / num_room`
-- **Building Age**: `transaction_year - build_year`
-- **Floor Ratio**: `floor / max_floor`
-- **Log Transformations**: For skewed features
+- **Living Efficiency**: `life_sq / full_sq` (living space ratio)
+- **Average Room Size**: `full_sq / num_room` (luxury indicator)
+- **Floor Ratio**: `floor / max_floor` (floor desirability)
+- **Log Transformations**: `log1p(full_sq)` for skewed features
+- **Amenity Score**: Combined accessibility to schools, parks, metro, etc.
 
 ### 3. Categorical Encoding
 - **Frequency Encoding**: For high-cardinality features (sub_area)
@@ -132,11 +130,13 @@ This project demonstrates:
 
 ## 📝 Files Description
 
-- **`main.py`**: Complete preprocessing pipeline with detailed comments
-- **`base.py`**: Minimal preprocessing baseline model
-- **`advanced.py`**: Advanced preprocessing with comprehensive pipeline
+- **`base.ipynb`**: Baseline model with minimal preprocessing (main demonstration)
+- **`advanced.ipynb`**: Advanced model with comprehensive preprocessing (main demonstration)
 - **`baseline_rmse.txt`**: Baseline model RMSE result for comparison
 - **`presentation.pdf`**: Project presentation slides
+- **`Data/sberbank_housing.csv`**: Main dataset (preprocessed subset of original data)
+
+**Note**: The Jupyter notebooks contain the complete analysis with outputs, visualizations, and detailed explanations. They are the primary files for understanding and running the demonstration.
 
 ## 🤝 Contributing
 
