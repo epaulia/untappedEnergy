@@ -11,11 +11,11 @@ This repository contains a demonstration project showcasing how better preproces
 - **Purpose**: Show that systematic data preprocessing can deliver improvements even with basic models
 - **Learning Objective**: Emphasize that clean data and proper preprocessing often trump complex algorithms
 
-**Key Takeaway**: The 27.30% improvement demonstrates that investing in data quality and preprocessing can deliver immediate, substantial benefits to any ML project.
+**Key Takeaway**: The 27.30% improvement demonstrates that investing in data quality and preprocessing can deliver immediate benefits to any ML project.
 
 ## 🎯 Project Overview
 
-The goal of this project is to demonstrate the dramatic impact that proper data preprocessing can have on model performance. We compare:
+The goal of this project is to demonstrate the impact that proper data preprocessing can have on model performance. We compare:
 
 - **Baseline Model** (`base.ipynb`): Minimal preprocessing approach
 - **Improved Model** (`advanced.ipynb`): Better preprocessing pipeline
@@ -25,16 +25,13 @@ The goal of this project is to demonstrate the dramatic impact that proper data 
 ### Business Context
 This case study addresses a critical industry challenge: **70% of AI project failures are due to data quality issues**, resulting in an estimated **$5T annual revenue loss globally**. This project demonstrates how strategic data preprocessing can deliver immediate, substantial improvements in AI project success rates.
 
-### Key Achievement
-**27.30% improvement in model accuracy through better data preprocessing alone**, proving that clean data trumps complex algorithms.
-
 ## 📊 Dataset
 
 The project uses the **Sberbank Housing Dataset**, which contains real estate data from Moscow, Russia. The dataset includes:
 
 - **Target Variable**: `price_doc` (house price in rubles)
-- **Features**: 20+ variables including square footage, location data, building characteristics, and proximity to amenities
-- **Size**: ~27,000 records after preprocessing
+- **Features**: 20 variables including square footage, location data, building characteristics, and proximity to amenities
+- **Size**: ~27,000 records after stripping the dataset down (for compute optimization reasons)
 
 ### Data Files
 - `Data/sberbank_housing.csv` - Main dataset
@@ -88,7 +85,7 @@ untappedEnergy/
 | Model | RMSE (Log Scale) | RMSE (Rubles) | Features Used |
 |-------|------------------|----------------|---------------|
 | Baseline | 0.551 | 4,595,983 | 6 features |
-| Improved | 0.502 | 3,340,000 | All features |
+| Improved | 0.502 | 3,340,000 | 17 features |
 
 **Improvement**: **27.30% reduction in RMSE** through better preprocessing
 
@@ -164,22 +161,6 @@ pip install pandas numpy scikit-learn matplotlib scipy jupyter ipykernel
 - **Duplicate Elimination**: Remove exact duplicates
 - **Data Type Conversion**: Proper numeric types
 
-## 📊 Key Insights
-
-1. **Feature Engineering Impact**: Domain-specific features like living efficiency and building age significantly improve predictions
-2. **Missing Value Strategy**: Sophisticated imputation methods preserve data relationships
-3. **Categorical Data**: Proper encoding of categorical variables captures important market information
-4. **Data Quality**: Cleaning outliers and duplicates improves model stability
-
-## 🎓 Learning Objectives
-
-This project demonstrates:
-- The importance of thorough data preprocessing
-- How domain knowledge can guide feature engineering
-- The impact of missing value strategies
-- Effective categorical variable handling
-- The relationship between data quality and model performance
-
 ## 💡 Key Takeaways
 
 1. **Clean data trumps complex algorithms**: 27.30% improvement through preprocessing alone
@@ -193,11 +174,7 @@ This project demonstrates:
 
 ## 🤝 Contributing
 
-This is a demonstration project. Feel free to experiment with different preprocessing techniques or models to further improve performance.
-
----
-
-**Note**: This project demonstrates the impact that proper data preprocessing can have on machine learning model performance, with a focus on practical, domain-specific techniques rather than complex algorithms.
+This is a demonstration project.
 
 ---
 
